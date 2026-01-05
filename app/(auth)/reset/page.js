@@ -42,6 +42,7 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("idle");
+  const [debugDetails, setDebugDetails] = useState(null);
 
   useEffect(() => {
     if (!supabase) {
@@ -51,6 +52,29 @@ export default function ResetPasswordPage() {
     }
 
     let cancelled = false;
+    const locationDetails = {
+      hash: typeof window !== "undefined" ? window.location.hash ?? "" : "",
+      search: typeof window !== "undefined" ? window.location.search ?? "" : "",
+    };
+    setDebugDetails(locationDetails);
+
+    const handleSessionEvent = (event, session) => {
+      if (cancelled) return;
+      if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
+        setStage("ready");
+        setError("");
+      }
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(handleSessionEvent);
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!cancelled && data?.session) {
+        setStage("ready");
+      }
+    });
 
     const run = async () => {
       const payload = extractRecoveryPayload();
@@ -106,6 +130,7 @@ export default function ResetPasswordPage() {
       setError("Password must be at least 8 characters long.");
       return;
     }
+      subscription.unsubscribe();
 
     setStatus("loading");
     setError("");
@@ -137,6 +162,9 @@ export default function ResetPasswordPage() {
             <Button as="a" href="/login" variant="secondary">
               Back to sign in
             </Button>
+            {debugDetails && (
+              <p className="break-words text-xs text-neutral-400">{JSON.stringify(debugDetails)}</p>
+            )}
           </div>
         )}
         {stage === "error" && (
