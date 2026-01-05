@@ -5,22 +5,33 @@ import { useRouter } from "next/navigation";
 import Button from "../../../components/ui/Button";
 import { getBrowserClient } from "../../../lib/supabase/browserClient";
 
-function extractRecoveryParams() {
+function extractRecoveryPayload() {
   if (typeof window === "undefined") {
     return null;
   }
 
   const sources = [window.location.hash?.slice(1), window.location.search?.slice(1)];
+
   for (const source of sources) {
     if (!source) continue;
     const params = new URLSearchParams(source);
     const type = params.get("type");
+    if (type !== "recovery") {
+      continue;
+    }
+
     const accessToken = params.get("access_token");
     const refreshToken = params.get("refresh_token");
-    if (type === "recovery" && accessToken && refreshToken) {
-      return { accessToken, refreshToken };
+    if (accessToken && refreshToken) {
+      return { mode: "session", accessToken, refreshToken };
+    }
+
+    const code = params.get("code") || params.get("token") || null;
+    if (code) {
+      return { mode: "code", code };
     }
   }
+
   return null;
 }
 
@@ -39,22 +50,48 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    const params = extractRecoveryParams();
-    if (!params) {
-      setStage("missing");
-      return;
-    }
+    let cancelled = false;
 
-    const { accessToken, refreshToken } = params;
-    supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken }).then(({ error: sessionError }) => {
-      if (sessionError) {
-        setError(sessionError.message);
-        setStage("error");
+    const run = async () => {
+      const payload = extractRecoveryPayload();
+      if (!payload) {
+        setStage("missing");
         return;
       }
-      window.history.replaceState({}, document.title, window.location.pathname);
-      setStage("ready");
-    });
+
+      try {
+        if (payload.mode === "session") {
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: payload.accessToken,
+            refresh_token: payload.refreshToken,
+          });
+          if (sessionError) {
+            throw sessionError;
+          }
+        } else if (payload.mode === "code") {
+          const { error: codeError } = await supabase.auth.exchangeCodeForSession(payload.code);
+          if (codeError) {
+            throw codeError;
+          }
+        }
+
+        if (cancelled) return;
+        if (typeof window !== "undefined" && typeof window.history?.replaceState === "function") {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        setStage("ready");
+      } catch (sessionError) {
+        if (cancelled) return;
+        setError(sessionError?.message ?? "We couldn't verify this reset link.");
+        setStage("error");
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
   }, [supabase]);
 
   const handleSubmit = async (event) => {
