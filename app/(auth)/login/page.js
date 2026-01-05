@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CredentialForm from "../../../components/auth/CredentialForm";
+import RecoveryRedirector from "../../../components/auth/RecoveryRedirector";
 
 export const metadata = {
   title: "Sign in | GC Forum",
@@ -12,6 +13,7 @@ export default async function LoginPage({ searchParams }) {
 
   return (
     <div className="bg-white">
+      <RecoveryRedirector />
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr]">
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-primary/60">GC Forum Access</p>
