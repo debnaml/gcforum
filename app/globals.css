@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f6fb;
+  --foreground: #333333;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: #4b1d63;
+  --color-primary-ink: #2f0b4b;
+  --color-accent: #1c8d97;
+  --color-secondary: #237781;
+  --color-soft: #f5f1fb;
+  --color-ivory: #fdfaf5;
+  --color-sky: #e4f0f4;
+  --color-muted: #e6e1ee;
+  --font-sans: var(--font-sans-base);
+  --font-serif: var(--font-hero-serif, "Noto Serif", serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root,
+html {
+  background: var(--color-primary-ink);
 }
 
 body {
-  background: var(--background);
+  margin: 0;
+  font-family: var(--font-sans, "Open Sans", sans-serif);
+  background: var(--color-primary-ink);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+.font-serif {
+  font-family: var(--font-hero-serif, "Noto Serif", serif);
+}
+
+.font-hero-serif {
+  font-family: var(--font-hero-serif, "Noto Serif", serif);
+}
+
+.rich-text h2,
+.heading-2 {
+  font-family: var(--font-hero-serif, "Noto Serif", serif);
+  font-size: 30px;
+  line-height: 1.3;
+}
+
+main {
+  min-height: calc(100vh - 200px);
+}
+
+.bg-soft {
+  background: var(--color-soft);
+}
+
+.bg-sky {
+  background: var(--color-sky);
+}
+
+.bg-ivory {
+  background: var(--color-ivory);
+}
+
+.text-primary-ink {
+  color: #333333;
+}
+
+.bg-primary-ink {
+  background: var(--color-primary-ink);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-primary {
+  background: var(--color-primary);
+}
+
+.bg-secondary {
+  background: var(--color-secondary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
 }
