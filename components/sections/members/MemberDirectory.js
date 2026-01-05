@@ -33,6 +33,10 @@ export default function MemberDirectory({ members }) {
 
   const filteredMembers = useMemo(() => {
     return members.filter((member) => {
+      const normalizedRole = (member?.role ?? "member").toLowerCase();
+      if (normalizedRole !== "member") {
+        return false;
+      }
       if (search && !member.name.toLowerCase().includes(search.toLowerCase())) {
         return false;
       }
