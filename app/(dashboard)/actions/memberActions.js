@@ -64,7 +64,7 @@ async function inviteApplicantUser(client, application) {
         full_name: fullName,
         organisation: application.organisation ?? undefined,
       },
-      redirectTo: `${siteUrl}/reset`,
+      redirectTo: `${siteUrl}/login?redirect=/reset`,
     });
 
     if (error) {
@@ -383,7 +383,7 @@ export async function resetMemberPassword(formData) {
     return { success: false, message: "Member email is required." };
   }
 
-  const redirectTo = `${siteUrl}/reset`;
+  const redirectTo = `${siteUrl}/login?redirect=/reset`;
   const { data, error } = await client.auth.admin.generateLink({
     type: "recovery",
     email,
