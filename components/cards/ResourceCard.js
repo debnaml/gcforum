@@ -21,7 +21,7 @@ function AuthorAvatar({ name, avatarUrl }) {
   if (avatarUrl) {
     return (
       <div className="relative inline-flex h-10 w-10 overflow-hidden rounded-full border border-white bg-white shadow-sm">
-        <Image src={avatarUrl} alt={name || "Author avatar"} fill sizes="40px" className="object-cover" />
+        <Image src={avatarUrl} alt={name || "Author avatar"} fill sizes="40px" className="object-cover object-left" />
       </div>
     );
   }

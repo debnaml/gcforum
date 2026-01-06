@@ -87,11 +87,72 @@ export default async function ResourceDetailPage({ params }) {
   }
 
   const jsonLd = buildArticleJsonLd(article);
-  const authorLine = (article.authors ?? []).map((author) => author.name).join(", ");
+  const normalizedAuthors = Array.isArray(article.authors)
+    ? article.authors
+        .map((author, index) => {
+          if (!author) return null;
+          if (typeof author === "string") {
+            const name = author.trim();
+            if (!name) return null;
+            return {
+              id: `author-${index}-${name}`,
+              name,
+              role: null,
+              organisation: null,
+              avatarUrl: null,
+              email: null,
+              phone: null,
+            };
+          }
+          const name =
+            author.name ??
+            author.full_name ??
+            author.fullName ??
+            author.display_name ??
+            author.displayName ??
+            "";
+          if (!name) return null;
+          return {
+            id: author.id ?? author.profile_id ?? author.profileId ?? `author-${index}`,
+            name,
+            role: author.role ?? author.title ?? author.jobTitle ?? null,
+            organisation:
+              author.organisation ??
+              author.organization ??
+              author.organisation_name ??
+              author.organization_name ??
+              null,
+            avatarUrl: author.avatarUrl ?? author.avatar_url ?? author.avatar ?? null,
+            email: author.email ?? null,
+            phone: author.phone ?? author.telephone ?? null,
+          };
+        })
+        .filter(Boolean)
+    : [];
+  const fallbackAuthors =
+    normalizedAuthors.length || !article.author
+      ? []
+      : [
+          {
+            id: "primary-author",
+            name: article.author,
+            role: article.authorRole ?? article.author_role ?? null,
+            organisation:
+              article.authorOrganisation ??
+              article.authorOrganization ??
+              article.author_organisation ??
+              article.author_organization ??
+              null,
+            avatarUrl: null,
+            email: null,
+            phone: null,
+          },
+        ];
+  const authorEntries = normalizedAuthors.length ? normalizedAuthors : fallbackAuthors;
+  const authorLine = authorEntries.map((author) => author.name).filter(Boolean).join(", ");
   const displayTitle = article.title ? `${article.title.charAt(0).toUpperCase()}${article.title.slice(1)}` : "";
   const publishedDate = article.publishedOn ? formatDate(article.publishedOn, "dd MMMM yyyy") : null;
-  const authors = Array.isArray(article.authors) ? article.authors : [];
-  const primaryAuthor = authors[0] ?? null;
+  const primaryAuthor = authorEntries[0] ?? null;
   const authorDisplayName = authorLine || primaryAuthor?.name || "GC Forum Editorial";
   const relatedPayload = await getResources({
     category: article.categorySlug || "all",
@@ -170,36 +231,37 @@ export default async function ResourceDetailPage({ params }) {
             </div>
             <aside className="space-y-8">
               <div className="rounded-none border border-[#E5E2EB] bg-[#F9F7FB] p-6">
-                <p className="font-hero-serif text-2xl text-primary-ink">Author</p>
-                {primaryAuthor ? (
-                  <div className="mt-4 flex items-center gap-4">
-                    <div className="relative h-16 w-16 overflow-hidden rounded-full bg-[#E5DFF3]">
-                      {primaryAuthor.avatarUrl ? (
-                        <Image src={primaryAuthor.avatarUrl} alt={primaryAuthor.name ?? "Author avatar"} fill sizes="64px" className="object-cover" />
-                      ) : (
-                        <span className="flex h-full w-full items-center justify-center text-lg font-semibold text-primary-ink">
-                          {getInitials(primaryAuthor.name)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-lg font-semibold text-primary-ink">{primaryAuthor.name}</p>
-                      {primaryAuthor.role && <p className="text-sm text-neutral-600">{primaryAuthor.role}</p>}
-                      {primaryAuthor.phone && (
-                        <a
-                          href={`tel:${primaryAuthor.phone.replace(/[^+\d]/g, "")}`}
-                          className="block text-sm text-[#237781] underline"
-                        >
-                          {primaryAuthor.phone}
-                        </a>
-                      )}
-                      {primaryAuthor.email && (
-                        <a href={`mailto:${primaryAuthor.email}`} className="block text-sm text-[#237781] underline">
-                          {primaryAuthor.email}
-                        </a>
-                      )}
-                      {primaryAuthor.organisation && <p className="text-sm text-neutral-500">{primaryAuthor.organisation}</p>}
-                    </div>
+                <p className="font-hero-serif text-2xl text-primary-ink">{authorEntries.length > 1 ? "Authors" : "Author"}</p>
+                {authorEntries.length > 0 ? (
+                  <div className="mt-4 space-y-4">
+                    {authorEntries.map((author, index) => (
+                      <div key={author.id ?? `${author.name}-${index}`} className="flex items-start gap-4 border-b border-[#E5E2EB] pb-4 last:border-b-0 last:pb-0">
+                        <div className="relative h-16 w-16 overflow-hidden rounded-full bg-[#E5DFF3]">
+                          {author.avatarUrl ? (
+                            <Image src={author.avatarUrl} alt={author.name ?? "Author avatar"} fill sizes="64px" className="object-cover object-left" />
+                          ) : (
+                            <span className="flex h-full w-full items-center justify-center text-lg font-semibold text-primary-ink">
+                              {getInitials(author.name)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="space-y-1 text-sm text-neutral-600">
+                          <p className="text-lg font-semibold text-primary-ink">{author.name}</p>
+                          {author.role && <p className="text-neutral-600">{author.role}</p>}
+                          {author.organisation && <p className="text-xs text-neutral-500">{author.organisation}</p>}
+                          {author.phone && (
+                            <a href={`tel:${author.phone.replace(/[^+\d]/g, "")}`} className="block text-xs text-[#237781] underline">
+                              {author.phone}
+                            </a>
+                          )}
+                          {author.email && (
+                            <a href={`mailto:${author.email}`} className="block text-xs text-[#237781] underline">
+                              {author.email}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <p className="mt-4 text-sm text-neutral-600">GC Forum Editorial</p>

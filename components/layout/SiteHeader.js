@@ -44,12 +44,10 @@ export default function SiteHeader({ profile }) {
   const hideHeaderRoutes = ["/login", "/signup", "/reset"];
   const hideHeader = hideHeaderRoutes.some((route) => pathname?.startsWith(route));
 
-  if (hideHeader) {
-    return null;
-  }
-
   useEffect(() => {
-    if (!menuOpen) return undefined;
+    if (!menuOpen || hideHeader) {
+      return undefined;
+    }
     const handleClick = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
@@ -66,7 +64,15 @@ export default function SiteHeader({ profile }) {
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleEsc);
     };
-  }, [menuOpen]);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [menuOpen, hideHeader]);
+
+  if (hideHeader) {
+    return null;
+  }
 
   const primaryMenuItems = [
     { label: "My Profile", href: "/profile" },
@@ -115,8 +121,9 @@ export default function SiteHeader({ profile }) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`transition-colors ${isActive ? "text-accent" : "text-[#ffffff]"}`}
+                  className={`relative pb-1 transition-colors ${isActive ? "text-white" : "text-[#ffffff]"}`}
                 >
+                  {isActive && <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white" aria-hidden />}
                   {link.label}
                 </Link>
               );

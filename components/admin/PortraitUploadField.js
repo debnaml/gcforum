@@ -91,7 +91,7 @@ export default function PortraitUploadField({
       />
       <input type="hidden" name={name} value={value} />
       <p className="mt-2 text-xs text-neutral-500">
-        Images upload to the Supabase bucket defined by <code>NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET</code> (defaults to <code>team-avatars</code>).
+        Paste an image URL or upload a new portrait. Photos are stored securely for use across the members area.
       </p>
       {fallbackNotice && <p className="mt-1 text-xs text-amber-600">{fallbackNotice}</p>}
       {error && <p className="mt-2 text-xs text-red-600">{error}</p>}

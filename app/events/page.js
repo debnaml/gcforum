@@ -14,7 +14,6 @@ export default async function EventsPage() {
     <div className="bg-white">
       <PageBanner
         title="Events"
-        description="View and book roundtables, briefings, and on-demand sessions tailored for general counsel leaders."
         centerContent
       />
       <div className="mx-auto max-w-6xl px-6 py-16">
@@ -23,8 +22,8 @@ export default async function EventsPage() {
           title="Upcoming GC Forum events"
           description="Browse the calendar of upcoming and past sessions to plan your next touchpoint."
         />
-        <div className="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
-          <div className="space-y-10">
+        <div className="mt-10 grid gap-8 lg:grid-cols-3">
+          <div className="space-y-10 lg:col-span-2">
             <div>
               <h3 className="text-2xl font-serif text-primary-ink">Upcoming Events</h3>
               <div className="mt-6 grid gap-6 md:grid-cols-2">
@@ -42,19 +41,25 @@ export default async function EventsPage() {
               </div>
             </div>
           </div>
-          <aside className="rounded-2xl border border-neutral-200 bg-soft p-6">
-            <h4 className="text-lg font-semibold text-primary-ink">Event filter</h4>
-            <div className="mt-4 space-y-4 text-sm">
-              {["Event Title", "Event Type", "Event Location", "Dates", "Order By"].map((label) => (
-                <label key={label} className="flex flex-col gap-2">
-                  <span className="text-neutral-600">{label}</span>
-                  <select className="rounded-xl border border-neutral-200 bg-white px-3 py-2">
+          <aside className="lg:col-span-1 border border-[#CCCCCC] bg-[#F5F4F6] p-6">
+            <form>
+              <h4 className="font-hero-serif text-xl text-[#333333]">Filter events</h4>
+              <p className="mt-1 text-sm text-neutral-600">Focus the programme by keyword, format, city, or timeframe.</p>
+              {["Event title", "Event type", "Location", "Date range", "Order by"].map((label) => (
+                <label key={label} className="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
+                  {label}
+                  <select className="rounded-none border border-[#CCCCCC] bg-white px-3 py-2 text-base focus:border-primary focus:outline-none">
                     <option>All</option>
                   </select>
                 </label>
               ))}
-              <button className="mt-4 w-full rounded-none bg-primary px-4 py-2 text-white">Apply filter</button>
-            </div>
+              <button
+                type="submit"
+                className="mt-6 w-full rounded-none bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white"
+              >
+                Apply filters
+              </button>
+            </form>
           </aside>
         </div>
       </div>

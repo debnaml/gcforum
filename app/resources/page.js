@@ -58,8 +58,8 @@ export default async function ResourcePage({ searchParams = {} }) {
             )}
             <Pagination pagination={pagination} searchParams={resolvedSearchParams} />
           </div>
-          <aside className="lg:col-span-1">
-            <form className="border border-[#CCCCCC] bg-[#F5F4F6] px-5 py-6" method="get">
+          <aside className="lg:col-span-1 border border-[#CCCCCC] bg-[#F5F4F6] p-6">
+            <form method="get">
               <input type="hidden" name="page" value="1" />
               <h4 className="font-hero-serif text-xl text-[#333333]">Filter resources</h4>
               <p className="mt-1 text-sm text-neutral-600">Refine the library by keyword, category, tag, or author.</p>

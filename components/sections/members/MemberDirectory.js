@@ -61,8 +61,9 @@ export default function MemberDirectory({ members }) {
             <MemberCard key={member.id} member={member} />
           ))}
         </div>
-        <aside className="border border-neutral-300 bg-[#F5F4F6] p-6">
-          <h4 className="text-lg font-semibold text-primary-ink">Directory Filter</h4>
+        <aside className="border border-[#CCCCCC] bg-[#F5F4F6] p-6">
+          <h4 className="font-hero-serif text-xl text-[#333333]">Filter members</h4>
+          <p className="mt-1 text-sm text-neutral-600">Search by name, organisation, location, sector, or seniority.</p>
           <label className="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
             Members Name
             <input
@@ -90,8 +91,8 @@ export default function MemberDirectory({ members }) {
               </select>
             </label>
           ))}
-          <button className="mt-6 w-full border border-[#1A9AA5] bg-[#1A9AA5] px-4 py-2 text-sm font-semibold text-white">
-            Apply Filter
+          <button className="mt-6 w-full rounded-none bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white">
+            Apply filters
           </button>
           <div className="mt-8 border border-neutral-200 bg-white p-4 text-sm text-neutral-600">
             <p className="font-semibold text-primary-ink">Not appearing?</p>
