@@ -70,21 +70,6 @@ export default function SiteHeader({ profile }) {
     };
   }, [menuOpen, hideHeader]);
 
-  if (hideHeader) {
-    return null;
-  }
-
-  const primaryMenuItems = [
-    { label: "My Profile", href: "/profile" },
-    { label: "My Favourites", href: "/favourites" },
-  ];
-
-  const secondaryMenuItems = [
-    ...(profile?.role === ROLES.admin ? [{ label: "Admin", href: "/admin" }] : []),
-    { label: "My Settings", href: "/settings" },
-    { label: "Logout", href: "/logout", isLogout: true },
-  ];
-
   const handleLogout = useCallback(async () => {
     if (isLoggingOut) {
       return;
@@ -104,6 +89,21 @@ export default function SiteHeader({ profile }) {
       setIsLoggingOut(false);
     }
   }, [isLoggingOut, logout, router]);
+
+  if (hideHeader) {
+    return null;
+  }
+
+  const primaryMenuItems = [
+    { label: "My Profile", href: "/profile" },
+    { label: "My Favourites", href: "/favourites" },
+  ];
+
+  const secondaryMenuItems = [
+    ...(profile?.role === ROLES.admin ? [{ label: "Admin", href: "/admin" }] : []),
+    { label: "My Settings", href: "/settings" },
+    { label: "Logout", href: "/logout", isLogout: true },
+  ];
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 h-[110px] border-b border-white/30 bg-primary-ink/90 text-white backdrop-blur">
