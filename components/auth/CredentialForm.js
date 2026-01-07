@@ -12,6 +12,11 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
   const [magicLink, setMagicLink] = useState(false);
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
+  const emitDebug = (details) => {
+    if (typeof window !== "undefined" && typeof window.__gcLoginDebug === "function") {
+      window.__gcLoginDebug(details);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,6 +28,7 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
         const supabase = getBrowserClient();
         if (!supabase) {
           setMessage("Supabase is not configured. Add your environment variables to .env.local.");
+          emitDebug({ type: "magic_link_supabase_missing" });
           return;
         }
 
@@ -33,6 +39,7 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
 
         if (error) {
           setMessage(error.message);
+          emitDebug({ type: "magic_link_error", message: error.message });
           return;
         }
 
@@ -54,6 +61,11 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
 
         if (!response.ok) {
           setMessage(payload?.error ?? "Unable to sign in with those credentials.");
+          emitDebug({
+            type: "signin_failed_response",
+            status: response.status,
+            payload,
+          });
           return;
         }
 
@@ -67,6 +79,7 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
       const supabase = getBrowserClient();
       if (!supabase) {
         setMessage("Supabase is not configured. Add your environment variables to .env.local.");
+        emitDebug({ type: "signup_supabase_missing" });
         return;
       }
 
@@ -74,12 +87,14 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
 
       if (error) {
         setMessage(error.message);
+        emitDebug({ type: "signup_error", message: error.message });
         return;
       }
 
       setMessage("Account created.");
     } catch (error) {
       setMessage(error?.message ?? "We couldn’t complete that request. Please try again.");
+      emitDebug({ type: "credential_form_exception", message: error?.message, stack: error?.stack });
     } finally {
       setStatus("idle");
     }
