@@ -74,7 +74,7 @@ export default function ProfileDetailsForm({ profile }) {
         <button
           type="submit"
           disabled={disabled}
-          className="rounded-none bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white"
+          className="inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-3 text-sm font-semibold uppercase tracking-wide text-white"
         >
           Save profile
         </button>

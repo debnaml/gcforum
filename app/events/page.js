@@ -18,7 +18,6 @@ export default async function EventsPage() {
       />
       <div className="mx-auto max-w-6xl px-6 py-16">
         <SectionHeading
-          eyebrow="Programming"
           title="Upcoming GC Forum events"
           description="Browse the calendar of upcoming and past sessions to plan your next touchpoint."
         />
@@ -53,12 +52,14 @@ export default async function EventsPage() {
                   </select>
                 </label>
               ))}
-              <button
-                type="submit"
-                className="mt-6 w-full rounded-none bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white"
-              >
-                Apply filters
-              </button>
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-2 text-sm font-semibold uppercase tracking-wide text-white"
+                >
+                  Apply filters
+                </button>
+              </div>
             </form>
           </aside>
         </div>

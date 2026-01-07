@@ -21,7 +21,6 @@ export default async function ProfilePage() {
       </div>
       <section className="mt-16 space-y-10">
         <SectionHeading
-          eyebrow="Profile"
           title="Manage your member profile"
           description="Update your portrait and directory information so other General Counsel can connect with you. Changes are saved instantly."
         />
@@ -42,9 +41,9 @@ export default async function ProfilePage() {
               <p className="mt-2">You can toggle whether other members can find you.</p>
               <Link
                 href="/settings"
-                className="mt-4 inline-flex w-full items-center justify-center rounded-none bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-primary/90"
+                className="mt-4 inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-2 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-primary/90"
               >
-                Open visibility settings
+                Edit My Settings
               </Link>
             </div>
             <div className="border border-dashed border-primary/30 bg-white/70 p-6 text-sm text-neutral-700">
@@ -55,12 +54,6 @@ export default async function ProfilePage() {
               <p className="mt-2">
                 If anything looks incorrect, contact the Birketts GC Forum team and we&apos;ll help you out.
               </p>
-              <Link
-                href="/profile"
-                className="mt-4 inline-flex w-full items-center justify-center rounded-none bg-secondary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
-              >
-                Edit my profile
-              </Link>
             </div>
           </aside>
         </div>

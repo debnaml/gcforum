@@ -118,13 +118,16 @@ export default async function ResourcePage({ searchParams = {} }) {
                   ))}
                 </select>
               </label>
-              <div className="mt-6 flex flex-col gap-2">
-                <button type="submit" className="w-full rounded-none bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white">
+              <div className="mt-6 flex flex-col items-center gap-2">
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-2 text-sm font-semibold uppercase tracking-wide text-white"
+                >
                   Apply filters
                 </button>
                 <Link
                   href="/resources"
-                  className="w-full rounded-none border border-[#CCCCCC] px-4 py-2 text-center text-sm font-semibold text-primary-ink"
+                  className="inline-flex items-center justify-center rounded-none border border-[#CCCCCC] px-[50px] py-2 text-sm font-semibold uppercase tracking-wide text-primary-ink"
                 >
                   Reset
                 </Link>

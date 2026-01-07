@@ -51,7 +51,6 @@ export default function MemberDirectory({ members }) {
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <SectionHeading
-        eyebrow="Member Directory"
         title="Search by organisation, location, and sector"
         description="Use the directory to connect with peers and explore new contacts across the GC Forum community."
       />
@@ -91,9 +90,11 @@ export default function MemberDirectory({ members }) {
               </select>
             </label>
           ))}
-          <button className="mt-6 w-full rounded-none bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white">
-            Apply filters
-          </button>
+          <div className="mt-6 flex justify-center">
+            <button className="inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-2 text-sm font-semibold uppercase tracking-wide text-white">
+              Apply filters
+            </button>
+          </div>
           <div className="mt-8 border border-neutral-200 bg-white p-4 text-sm text-neutral-600">
             <p className="font-semibold text-primary-ink">Not appearing?</p>
             <p className="mt-2">

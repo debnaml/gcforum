@@ -37,7 +37,7 @@ export default function DirectoryVisibilityForm({ defaultVisible = true, disable
       <button
         type="submit"
         disabled={disabled}
-        className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/40"
+        className="inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-3 text-sm font-semibold uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:bg-primary/40"
       >
         Save preference
       </button>
