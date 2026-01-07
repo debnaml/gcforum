@@ -29,6 +29,7 @@ export default function SiteHeader({ profile }) {
   const navLinks = profile ? memberLinks : guestLinks;
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef(null);
   const initials = useMemo(() => {
     if (!profile?.full_name) return "GC";
@@ -70,6 +71,20 @@ export default function SiteHeader({ profile }) {
     };
   }, [menuOpen, hideHeader]);
 
+  useEffect(() => {
+    if (hideHeader) {
+      return undefined;
+    }
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY >= 100);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hideHeader]);
+
   const handleLogout = useCallback(async () => {
     if (isLoggingOut) {
       return;
@@ -105,8 +120,10 @@ export default function SiteHeader({ profile }) {
     { label: "Logout", href: "/logout", isLogout: true },
   ];
 
+  const headerBackground = scrolled ? "bg-primary-ink/90 backdrop-blur" : "bg-transparent";
+
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 h-[110px] border-b border-white/30 bg-primary-ink/90 text-white backdrop-blur">
+    <header className={`fixed left-0 right-0 top-0 z-50 h-[110px] border-b border-white/30 text-white transition-colors duration-300 ${headerBackground}`}>
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
         <Link href="/" className="inline-flex items-center" aria-label="GC Forum home">
           <Image src="/gcforum.svg" alt="GC Forum" width={155} height={47} priority />
