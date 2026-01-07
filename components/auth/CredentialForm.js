@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Button from "../ui/Button";
 import { getBrowserClient } from "../../lib/supabase/browserClient";
 
-export default function CredentialForm({ mode = "signin", redirectTo = "/dashboard" }) {
+export default function CredentialForm({ mode = "signin", redirectTo = "/profile" }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +34,7 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
 
         const { error } = await supabase.auth.signInWithOtp({
           email,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+          options: { emailRedirectTo: `${window.location.origin}/profile` },
         });
 
         if (error) {
@@ -70,7 +70,7 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/dashboa
         }
 
         setMessage("Success! Redirecting…");
-        const target = redirectTo && redirectTo.startsWith("/") ? redirectTo : "/dashboard";
+        const target = redirectTo && redirectTo.startsWith("/") ? redirectTo : "/profile";
         router.push(target);
         router.refresh();
         return;

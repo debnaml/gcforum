@@ -10,7 +10,7 @@ export const metadata = {
 export default async function LoginPage({ searchParams }) {
   const resolvedParams = await searchParams;
   const redirectParam = typeof resolvedParams?.redirect === "string" ? resolvedParams.redirect : null;
-  const redirectTo = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/dashboard";
+  const redirectTo = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/profile";
 
   return (
     <div className="bg-white">
