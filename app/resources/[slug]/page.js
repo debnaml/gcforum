@@ -208,7 +208,7 @@ export default async function ResourceDetailPage({ params }) {
                     posterImage={article.heroImageUrl}
                     title={article.title}
                   />
-                  {article.contentHtml && (
+                  {article.contentHtml?.trim() && (
                     <div className="space-y-4">
                       <h2 className="heading-2 text-primary-ink">About this video</h2>
                       <div
