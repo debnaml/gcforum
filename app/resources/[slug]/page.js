@@ -45,6 +45,17 @@ function getInitials(name = "") {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+function hasRichTextContent(html) {
+  if (!html || typeof html !== "string") {
+    return false;
+  }
+  const normalized = html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .trim();
+  return normalized.length > 0;
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = await getResourceBySlug(slug);
@@ -164,6 +175,7 @@ export default async function ResourceDetailPage({ params }) {
   const relatedArticles = (relatedPayload?.items ?? [])
     .filter((item) => item?.slug && item.slug !== article.slug)
     .slice(0, 3);
+  const hasVideoDescription = isVideo && hasRichTextContent(article.contentHtml);
 
   return (
     <div className="bg-white">
@@ -208,7 +220,7 @@ export default async function ResourceDetailPage({ params }) {
                     posterImage={article.heroImageUrl}
                     title={article.title}
                   />
-                  {article.contentHtml?.trim() && (
+                  {hasVideoDescription && (
                     <div className="space-y-4">
                       <h2 className="heading-2 text-primary-ink">About this video</h2>
                       <div
