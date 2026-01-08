@@ -208,10 +208,13 @@ export default async function ResourceDetailPage({ params }) {
                     posterImage={article.heroImageUrl}
                     title={article.title}
                   />
-                  {article.description && (
+                  {article.contentHtml && (
                     <div className="space-y-4">
                       <h2 className="heading-2 text-primary-ink">About this video</h2>
-                      <p className="text-lg leading-relaxed text-neutral-700">{article.description}</p>
+                      <div
+                        className="rich-text space-y-6 text-base leading-relaxed text-neutral-800 [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-hero-serif [&_h3]:mt-8 [&_h3]:text-2xl [&_table]:w-full [&_table]:border-collapse [&_th]:text-left [&_td]:border-t [&_td]:border-neutral-200 [&_td]:py-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_img]:rounded-2xl"
+                        dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+                      />
                     </div>
                   )}
                 </>

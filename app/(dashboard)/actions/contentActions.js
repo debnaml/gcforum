@@ -243,17 +243,34 @@ export async function upsertResourceVideo(formData) {
   const videoUrl = formData.get("video_url")?.toString().trim() ?? "";
   const heroImageUrl = formData.get("hero_image_url")?.toString().trim() ?? "";
   const summary = formData.get("summary")?.toString() ?? "";
-  const description = formData.get("description")?.toString() ?? "";
+  const contentHtml = formData.get("content_html")?.toString() ?? "";
+  const categorySlug = formData.get("category_slug")?.toString().trim() || null;
 
   if (!videoUrl) {
     return { success: false, message: "A video URL is required." };
   }
 
+  let categoryId = null;
+  if (categorySlug) {
+    const { data: categoryRow, error: categoryError } = await client
+      .from("resource_categories")
+      .select("id")
+      .eq("slug", categorySlug)
+      .single();
+
+    if (categoryError && categoryError.code !== "PGRST116") {
+      console.error(categoryError.message);
+      return { success: false, message: categoryError.message };
+    }
+    categoryId = categoryRow?.id ?? null;
+  }
+
   const payload = {
     slug: normalizedSlug,
     title: titleInput,
+    category_id: categoryId,
     summary,
-    description,
+    content_html: contentHtml || "<p></p>",
     video_url: videoUrl,
     hero_image_url: heroImageUrl,
     published_on: publishedOnRaw || null,

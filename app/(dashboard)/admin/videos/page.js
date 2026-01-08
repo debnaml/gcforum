@@ -7,6 +7,7 @@ import PortraitUploadField from "../../../../components/admin/PortraitUploadFiel
 import DeleteVideoButton from "../../../../components/admin/DeleteVideoButton";
 import Pagination from "../../../../components/ui/Pagination";
 import { getServerClient } from "../../../../lib/supabase/serverClient";
+import ResourceRichTextEditor from "../../../../components/admin/ResourceRichTextEditor";
 import { deleteResourceVideo, upsertResourceVideo } from "../../actions/contentActions";
 
 export const metadata = {
@@ -25,7 +26,7 @@ function normalizeVideo(row) {
     slug: row.slug,
     title: row.title,
     summary: row.summary ?? "",
-    description: row.description ?? row.intro ?? "",
+    contentHtml: row.content_html ?? row.description ?? row.intro ?? "",
     videoUrl: row.video_url ?? "",
     heroImageUrl: row.hero_image_url ?? "",
     publishedOn: row.published_on ?? null,
@@ -33,6 +34,8 @@ function normalizeVideo(row) {
     featured: Boolean(row.featured),
     authors,
     authorIds,
+    category: row.category_name ?? "Uncategorised",
+    categorySlug: row.category_slug ?? "uncategorised",
   };
 }
 
@@ -55,13 +58,14 @@ async function getVideosAdminData({ page = 1, pageSize = ADMIN_PAGE_SIZE } = {})
     };
   }
 
-  const [videosRes, authorsRes] = await Promise.all([
+  const [videosRes, authorsRes, categoriesRes] = await Promise.all([
     supabase
       .from("resource_videos_public")
-      .select("id, slug, title, summary, intro, video_url, hero_image_url, published_on, status, featured, authors, author_ids", { count: "exact" })
+      .select("id, slug, title, summary, content_html, video_url, hero_image_url, published_on, status, featured, authors, author_ids, category_name, category_slug", { count: "exact" })
       .order("published_on", { ascending: false })
       .range(from, to),
     supabase.from("partners").select("id, name").eq("is_author", true).order("name", { ascending: true }),
+    supabase.from("resource_categories").select("id, name, slug").order("name", { ascending: true }),
   ]);
 
   if (videosRes.error) {
@@ -69,6 +73,9 @@ async function getVideosAdminData({ page = 1, pageSize = ADMIN_PAGE_SIZE } = {})
   }
   if (authorsRes.error) {
     console.error(authorsRes.error.message);
+  }
+  if (categoriesRes.error) {
+    console.error(categoriesRes.error.message);
   }
 
   const normalizedVideos = (videosRes.data ?? []).map((row) => normalizeVideo(row)).filter(Boolean);
@@ -78,6 +85,7 @@ async function getVideosAdminData({ page = 1, pageSize = ADMIN_PAGE_SIZE } = {})
   return {
     videos: normalizedVideos,
     authors: authorsRes.data ?? [],
+    categories: categoriesRes.data ?? [],
     pagination: {
       page: safePage,
       pageSize: safePageSize,
@@ -119,6 +127,9 @@ export default async function AdminVideosPage({ searchParams }) {
   const authorOptions = (adminData.authors ?? [])
     .map((author) => ({ id: author.id, label: author.name ?? author.full_name ?? "Unnamed" }))
     .filter((author) => author.id && author.label);
+  const categoryOptions = (adminData.categories ?? [])
+    .map((category) => ({ id: category.id, slug: category.slug, label: category.name ?? category.slug ?? "Uncategorised" }))
+    .filter((category) => category.slug && category.label);
 
   const mode = typeof resolvedSearchParams?.mode === "string" ? resolvedSearchParams.mode : null;
   const selectedVideoId = typeof resolvedSearchParams?.video === "string" ? resolvedSearchParams.video : null;
@@ -194,6 +205,21 @@ export default async function AdminVideosPage({ searchParams }) {
                     />
                   </label>
                   <label className="text-sm font-semibold text-primary-ink">
+                    Category
+                    <select
+                      name="category_slug"
+                      defaultValue={selectedVideo?.categorySlug ?? ""}
+                      className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3"
+                    >
+                      <option value="">Uncategorised</option>
+                      {categoryOptions.map((category) => (
+                        <option key={category.slug} value={category.slug}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="text-sm font-semibold text-primary-ink">
                     Status
                     <select name="status" defaultValue={selectedVideo?.status ?? "draft"} className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3">
                       <option value="published">Published</option>
@@ -235,16 +261,14 @@ export default async function AdminVideosPage({ searchParams }) {
                       placeholder="One-line summary shown on cards"
                     />
                   </label>
-                  <label className="text-sm font-semibold text-primary-ink md:col-span-2">
-                    Description
-                    <textarea
-                      name="description"
-                      rows={4}
-                      defaultValue={selectedVideo?.description ?? ""}
-                      className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3"
-                      placeholder="Full description displayed on the video page"
+                  <div className="md:col-span-2 space-y-2">
+                    <p className="text-sm font-semibold text-primary-ink">Description</p>
+                    <ResourceRichTextEditor
+                      name="content_html"
+                      initialContent={selectedVideo?.contentHtml ?? ""}
                     />
-                  </label>
+                    <p className="text-xs text-neutral-500">This content appears on the video detail page and supports headings, lists, images, and tables.</p>
+                  </div>
                   <div className="md:col-span-2">
                     <label className="text-sm font-semibold text-primary-ink w-full">
                       Authors
