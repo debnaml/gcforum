@@ -2,6 +2,7 @@ import Link from "next/link";
 import CredentialForm from "../../../components/auth/CredentialForm";
 import LoginErrorReporter from "../../../components/auth/LoginErrorReporter";
 import RecoveryRedirector from "../../../components/auth/RecoveryRedirector";
+import PageBanner from "../../../components/ui/PageBanner";
 
 export const metadata = {
   title: "Sign in | GC Forum",
@@ -13,16 +14,14 @@ export default async function LoginPage({ searchParams }) {
   const redirectTo = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/profile";
 
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-screen">
       <RecoveryRedirector />
       <LoginErrorReporter redirectTo={redirectTo} />
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr]">
+      <div className="relative left-1/2 right-1/2 -mt-16 w-screen -translate-x-1/2">
+        <PageBanner title="Login" centerContent />
+      </div>
+      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[2fr_1fr]">
         <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-primary/60">GC Forum Access</p>
-          <h1 className="mt-4 text-4xl font-serif text-primary-ink">Sign in to manage events, resources, and articles.</h1>
-          <p className="mt-4 text-lg text-neutral-600">
-            Members can save resources and see the latest updates. Editors manage articles and resources, while admins control the homepage experience.
-          </p>
           <div className="mt-10 rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
             <CredentialForm mode="signin" redirectTo={redirectTo} />
             <p className="mt-6 text-sm text-neutral-600">

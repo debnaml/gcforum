@@ -222,6 +222,120 @@ export async function deleteResourceArticle(formData) {
   redirect("/admin/articles?feedback=article-deleted");
 }
 
+export async function upsertResourceVideo(formData) {
+  if (!hasServiceRoleAccess) {
+    return { success: false, message: "Enable SUPABASE_SERVICE_ROLE_KEY for write access." };
+  }
+
+  const client = getServiceRoleClient();
+  const providedId = formData.get("id")?.toString().trim() || null;
+  const titleInput = formData.get("title")?.toString().trim() ?? "";
+  const slugInput = formData.get("slug")?.toString().trim() ?? "";
+  const normalizedSlug = slugify(slugInput || titleInput);
+
+  if (!normalizedSlug) {
+    return { success: false, message: "A title or slug is required." };
+  }
+
+  const publishedOnRaw = formData.get("published_on")?.toString().trim();
+  const statusInput = formData.get("status")?.toString().trim().toLowerCase();
+  const status = statusInput === "draft" ? "draft" : "published";
+  const videoUrl = formData.get("video_url")?.toString().trim() ?? "";
+  const heroImageUrl = formData.get("hero_image_url")?.toString().trim() ?? "";
+  const summary = formData.get("summary")?.toString() ?? "";
+  const description = formData.get("description")?.toString() ?? "";
+
+  if (!videoUrl) {
+    return { success: false, message: "A video URL is required." };
+  }
+
+  const payload = {
+    slug: normalizedSlug,
+    title: titleInput,
+    summary,
+    description,
+    video_url: videoUrl,
+    hero_image_url: heroImageUrl,
+    published_on: publishedOnRaw || null,
+    status,
+    featured: formData.get("featured") === "on",
+  };
+
+  if (providedId) {
+    payload.id = providedId;
+  }
+
+  const { data: video, error } = await client
+    .from("resource_videos")
+    .upsert(payload)
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+
+  const authorIds = formData.getAll("author_ids").map((value) => value?.toString().trim()).filter(Boolean);
+
+  const { error: removeAuthorsError } = await client
+    .from("resource_video_authors")
+    .delete()
+    .eq("video_id", video.id);
+
+  if (removeAuthorsError) {
+    console.error(removeAuthorsError.message);
+    return { success: false, message: removeAuthorsError.message };
+  }
+
+  if (authorIds.length > 0) {
+    const insertPayload = authorIds.map((partnerId, index) => ({
+      video_id: video.id,
+      partner_id: partnerId,
+      position: index,
+    }));
+    const { error: insertAuthorsError } = await client.from("resource_video_authors").insert(insertPayload);
+    if (insertAuthorsError) {
+      console.error(insertAuthorsError.message);
+      return { success: false, message: insertAuthorsError.message };
+    }
+  }
+
+  revalidatePath("/");
+  revalidatePath("/resources");
+  revalidatePath("/admin");
+  revalidatePath("/admin/videos");
+
+  const feedback = providedId ? "video-updated" : "video-created";
+  redirect(`/admin/videos?feedback=${feedback}`);
+}
+
+export async function deleteResourceVideo(formData) {
+  if (!hasServiceRoleAccess) {
+    return { success: false, message: "Enable SUPABASE_SERVICE_ROLE_KEY for write access." };
+  }
+
+  const id = formData.get("id")?.toString().trim();
+  if (!id) {
+    return { success: false, message: "Video ID is required." };
+  }
+
+  const client = getServiceRoleClient();
+  const { error } = await client.from("resource_videos").delete().eq("id", id);
+
+  if (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/resources");
+  revalidatePath("/admin");
+  revalidatePath("/admin/videos");
+
+  redirect("/admin/videos?feedback=video-deleted");
+}
+
 export async function upsertEvent(formData) {
   if (!hasServiceRoleAccess) {
     return { success: false, message: "Enable SUPABASE_SERVICE_ROLE_KEY for write access." };

@@ -6,6 +6,7 @@ const adminNavLinks = [
   { href: "/admin/members", label: "Members" },
   { href: "/admin/team", label: "Team" },
   { href: "/admin/articles", label: "Articles" },
+  { href: "/admin/videos", label: "Videos" },
 ];
 
 export default function AdminLayout({ children }) {

@@ -150,10 +150,9 @@ export default async function AdminArticlesPage({ searchParams }) {
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-2xl space-y-3">
               <p className="text-sm uppercase tracking-[0.3em] text-primary/60">Resources</p>
-              <h1 className="text-3xl font-serif text-primary-ink">Manage long-form resource articles</h1>
+              <h1 className="text-3xl font-serif text-primary-ink">Manage resource articles</h1>
               <p className="text-sm text-neutral-600">
-                These articles power the public /resources experience. Drafts stay hidden until published, and featured articles feed the
-                homepage carousel.
+                Publish articles into the Resource Centre. Drafts stay hidden until published, and featured items feed the homepage carousel.
               </p>
             </div>
             <Link
@@ -385,7 +384,7 @@ export default async function AdminArticlesPage({ searchParams }) {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-primary/60">All resources</p>
-              <h2 className="mt-1 heading-2 text-primary-ink">{totalArticlesCount > 0 ? totalArticlesCount : "No"} articles</h2>
+              <h2 className="mt-1 heading-2 text-primary-ink">{totalArticlesCount > 0 ? totalArticlesCount : "No"} resources</h2>
             </div>
           </div>
           {articles.length === 0 ? (
@@ -399,9 +398,16 @@ export default async function AdminArticlesPage({ searchParams }) {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-semibold text-primary-ink">{article.title}</p>
-                      <p className="text-sm text-neutral-600">
-                        {article.category || "Uncategorised"} · {formatDate(article.publishedOn)}
-                      </p>
+                      <div className="flex items-center gap-2 text-sm text-neutral-600">
+                        <span>{article.category || "Uncategorised"}</span>
+                        <span aria-hidden>·</span>
+                        <span>{formatDate(article.publishedOn)}</span>
+                        {article.type && (
+                          <span className="rounded-full bg-neutral-100 px-2 py-1 text-[11px] uppercase tracking-wide text-primary">
+                            {article.type}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <span

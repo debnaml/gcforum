@@ -42,7 +42,7 @@ export default function SiteHeader({ profile }) {
       .toUpperCase();
   }, [profile?.full_name]);
 
-  const hideHeaderRoutes = ["/login", "/signup", "/reset"];
+  const hideHeaderRoutes = ["/signup", "/reset"];
   const hideHeader = hideHeaderRoutes.some((route) => pathname?.startsWith(route));
 
   useEffect(() => {

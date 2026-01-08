@@ -25,7 +25,7 @@ const AREAS_OF_INTEREST = [
 
 function FieldError({ message }) {
   if (!message) return null;
-  return <p className="text-xs text-red-600">{message}</p>;
+  return <p className="mt-2 text-xs text-red-600">{message}</p>;
 }
 
 export default function MemberApplicationForm() {
@@ -103,106 +103,120 @@ export default function MemberApplicationForm() {
       </div>
       <div className="space-y-4">
         <p className="text-sm uppercase tracking-[0.3em] text-primary/60">Eligibility</p>
-        <label className="text-sm font-semibold text-primary-ink">
-          Current role
-          <input
-            name="current_role"
-            type="text"
-            required
-            className="mt-2 w-full rounded-xl border border-neutral-200 bg-white/70 px-4 py-3"
-            aria-invalid={Boolean(state.errors?.current_role)}
-          />
-          <FieldError message={state.errors?.current_role} />
-        </label>
-        <label className="text-sm font-semibold text-primary-ink">
-          Organisation
-          <input
-            name="organisation"
-            type="text"
-            required
-            className="mt-2 w-full rounded-xl border border-neutral-200 bg-white/70 px-4 py-3"
-            aria-invalid={Boolean(state.errors?.organisation)}
-          />
-          <FieldError message={state.errors?.organisation} />
-        </label>
-        <label className="text-sm font-semibold text-primary-ink">
-          Sector
-          <input
-            name="sector"
-            type="text"
-            required
-            className="mt-2 w-full rounded-xl border border-neutral-200 bg-white/70 px-4 py-3"
-            aria-invalid={Boolean(state.errors?.sector)}
-          />
-          <FieldError message={state.errors?.sector} />
-        </label>
-        <fieldset className="space-y-3 rounded-2xl border border-neutral-200 bg-white/60 p-4">
-          <legend className="text-sm font-semibold text-primary-ink">Team structure</legend>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="text-sm font-semibold text-primary-ink">
+            Current role
+            <input
+              name="current_role"
+              type="text"
+              required
+              className="mt-2 w-full rounded-xl border border-neutral-200 bg-white/70 px-4 py-3"
+              aria-invalid={Boolean(state.errors?.current_role)}
+            />
+            <FieldError message={state.errors?.current_role} />
+          </label>
+          <label className="text-sm font-semibold text-primary-ink">
+            Organisation
+            <input
+              name="organisation"
+              type="text"
+              required
+              className="mt-2 w-full rounded-xl border border-neutral-200 bg-white/70 px-4 py-3"
+              aria-invalid={Boolean(state.errors?.organisation)}
+            />
+            <FieldError message={state.errors?.organisation} />
+          </label>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="text-sm font-semibold text-primary-ink">
+            Sector
+            <input
+              name="sector"
+              type="text"
+              required
+              className="mt-2 w-full rounded-xl border border-neutral-200 bg-white/70 px-4 py-3"
+              aria-invalid={Boolean(state.errors?.sector)}
+            />
+            <FieldError message={state.errors?.sector} />
+          </label>
+          <div />
+        </div>
+        <div className="space-y-3">
+          <p className="text-sm font-semibold text-primary-ink">Team structure</p>
+          <fieldset className="space-y-3 rounded-2xl border border-neutral-200 bg-white/60 p-4">
           {TEAM_SIZE_OPTIONS.map((option, index) => (
             <label key={option.value} className="flex items-center gap-2 text-sm text-neutral-700">
               <input type="radio" name="team_size" value={option.value} defaultChecked={index === 0} />
               {option.label}
             </label>
           ))}
-        </fieldset>
+          </fieldset>
+        </div>
       </div>
       <div className="space-y-4">
-        <label className="text-sm font-semibold text-primary-ink">
-          Level of responsibility
+        <div className="space-y-2 text-sm font-semibold text-primary-ink">
+          <label className="block" htmlFor="responsibility-field">
+            Level of responsibility
+          </label>
           <textarea
+            id="responsibility-field"
             name="responsibility"
             rows={5}
             required
-            className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white/80 px-4 py-3"
+            className="w-full rounded-xl border border-neutral-200 bg-white/80 px-4 py-3"
             aria-invalid={Boolean(state.errors?.responsibility)}
             placeholder="Tell us about your executive responsibilities, decision-making remit, or board participation."
           />
           <FieldError message={state.errors?.responsibility} />
-        </label>
-        <fieldset className="space-y-3 rounded-2xl border border-neutral-200 bg-white/60 p-4">
-          <legend className="text-sm font-semibold text-primary-ink">Areas of interest</legend>
-          <p className="text-xs text-neutral-500">Select all topics that are most relevant to you.</p>
-          <div className="mt-3 grid gap-2 md:grid-cols-2">
-            {AREAS_OF_INTEREST.map((topic) => (
-              <label key={topic} className="flex items-center gap-2 text-sm text-neutral-700">
-                <input type="checkbox" name="areas_of_interest" value={topic} />
-                {topic}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <fieldset className="space-y-3 rounded-2xl border border-primary/20 bg-primary/5 p-4">
-          <legend className="text-sm font-semibold text-primary-ink">Consent</legend>
-          <div>
-            <p className="text-sm font-medium text-primary-ink">Appear in the member directory?</p>
-            <div className="mt-2 flex flex-wrap gap-4 text-sm text-neutral-700">
-              <label className="flex items-center gap-2">
-                <input type="radio" name="directory_consent" value="yes" defaultChecked /> Yes, show my profile
-              </label>
-              <label className="flex items-center gap-2">
-                <input type="radio" name="directory_consent" value="no" /> No, keep me hidden
-              </label>
+        </div>
+        <div className="space-y-3">
+          <p className="text-sm font-semibold text-primary-ink">Areas of interest</p>
+          <fieldset className="space-y-3 rounded-2xl border border-neutral-200 bg-white/60 p-4">
+            <p className="text-xs text-neutral-500">Select all topics that are most relevant to you.</p>
+            <div className="mt-3 grid gap-2 md:grid-cols-2">
+              {AREAS_OF_INTEREST.map((topic) => (
+                <label key={topic} className="flex items-center gap-2 text-sm text-neutral-700">
+                  <input type="checkbox" name="areas_of_interest" value={topic} />
+                  {topic}
+                </label>
+              ))}
             </div>
-          </div>
-          <label className="flex items-center gap-2 text-sm text-neutral-700">
-            <input type="checkbox" name="privacy_accepted" required />
-            I agree to the
-            <a href="/privacy" className="text-primary underline">Privacy Policy</a>
-            and
-            <a href="/terms" className="text-primary underline">Terms of Use</a>.
-          </label>
-          <FieldError message={state.errors?.privacy_accepted} />
-        </fieldset>
+          </fieldset>
+        </div>
+        <div className="space-y-3">
+          <p className="text-sm font-semibold text-primary-ink">Consent</p>
+          <fieldset className="space-y-3 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+            <div>
+              <p className="text-sm font-medium text-primary-ink">Appear in the member directory?</p>
+              <div className="mt-2 flex flex-wrap gap-4 text-sm text-neutral-700">
+                <label className="flex items-center gap-2">
+                  <input type="radio" name="directory_consent" value="yes" defaultChecked /> Yes, show my profile
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="radio" name="directory_consent" value="no" /> No, keep me hidden
+                </label>
+              </div>
+            </div>
+            <label className="flex items-center gap-2 text-sm text-neutral-700">
+              <input type="checkbox" name="privacy_accepted" required />
+              I agree to the
+              <a href="/privacy" className="text-primary underline">Privacy Policy</a>
+              and
+              <a href="/terms" className="text-primary underline">Terms of Use</a>.
+            </label>
+            <FieldError message={state.errors?.privacy_accepted} />
+          </fieldset>
+        </div>
       </div>
-      <div>
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="submit"
-          className="w-full rounded-full bg-primary px-6 py-3 text-base font-semibold text-white transition hover:bg-primary/90"
+          className="inline-flex items-center justify-center rounded-none bg-primary px-[50px] py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-primary/90"
         >
           Submit application
         </button>
         {state.message && (
-          <p className={`mt-3 text-sm ${state.status === "success" ? "text-emerald-700" : "text-red-600"}`}>
+          <p className={`text-sm ${state.status === "success" ? "text-emerald-700" : "text-red-600"}`}>
             {state.message}
           </p>
         )}

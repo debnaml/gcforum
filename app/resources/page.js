@@ -24,17 +24,18 @@ export default async function ResourcePage({ searchParams = {} }) {
     category: getFilterValue(resolvedSearchParams, "category", "all"),
     tag: getFilterValue(resolvedSearchParams, "tag", "all"),
     author: getFilterValue(resolvedSearchParams, "author", "all"),
+    type: getFilterValue(resolvedSearchParams, "type", "all"),
     page: Number(getFilterValue(resolvedSearchParams, "page", "1")) || 1,
   };
 
   const resources = await getResources(filters);
   const items = resources.items ?? [];
   const pagination = resources.pagination ?? { page: 1, totalPages: 1 };
-  const filterOptions = resources.filters ?? { categories: [], tags: [], authors: [] };
+  const filterOptions = resources.filters ?? { categories: [], tags: [], authors: [], types: [] };
 
   return (
     <div className="bg-white">
-      <PageBanner title="Resource Center" centerContent />
+      <PageBanner title="Resource Centre" centerContent />
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="max-w-3xl space-y-4">
           <h2 className="heading-2 text-[#333333]">Latest Resources</h2>
@@ -114,6 +115,21 @@ export default async function ResourcePage({ searchParams = {} }) {
                   {filterOptions.authors.map((author) => (
                     <option key={author.id} value={author.id}>
                       {author.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
+                Type
+                <select
+                  name="type"
+                  defaultValue={filters.type}
+                  className="rounded-none border border-[#CCCCCC] bg-white px-3 py-2 text-base focus:border-primary focus:outline-none"
+                >
+                  <option value="all">All types</option>
+                  {(filterOptions.types ?? []).map((type) => (
+                    <option key={type} value={type}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
                     </option>
                   ))}
                 </select>

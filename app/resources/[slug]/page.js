@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Star } from "lucide-react";
 import PageBanner from "../../../components/ui/PageBanner";
+import VideoPlayer from "../../../components/ui/VideoPlayer";
 import { getResourceBySlug, getResources } from "../../../lib/content";
 import { siteUrl } from "../../../lib/env";
 import { formatDate } from "../../../lib/utils";
@@ -86,6 +87,7 @@ export default async function ResourceDetailPage({ params }) {
     notFound();
   }
 
+  const isVideo = article.type === "video";
   const jsonLd = buildArticleJsonLd(article);
   const normalizedAuthors = Array.isArray(article.authors)
     ? article.authors
@@ -172,7 +174,7 @@ export default async function ResourceDetailPage({ params }) {
             <div className="space-y-1">
               {authorDisplayName && (
                 <p className="flex flex-wrap items-center gap-2 text-[18px] font-normal text-[#666666]">
-                  <span>By</span>
+                  <span>{isVideo ? "Featuring" : "By"}</span>
                   {primaryAuthor?.id ? (
                     <Link
                       href={`/resources?author=${primaryAuthor.id}`}
@@ -190,48 +192,68 @@ export default async function ResourceDetailPage({ params }) {
             <button
               type="button"
               className="flex items-center gap-3 self-start rounded-none border border-transparent px-4 py-2 text-[16px] font-normal text-[#237781] transition hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              aria-label="Save article"
+              aria-label={isVideo ? "Save video" : "Save article"}
             >
               <Star className="h-5 w-5" strokeWidth={1.5} />
-              Save article
+              {isVideo ? "Save video" : "Save article"}
             </button>
           </div>
           <hr className="border-t border-[#E5E2EB]" />
           <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
             <div className="space-y-8">
-              {article.intro && (
-                <div className="space-y-4">
-                  <h2 className="heading-2 text-primary-ink">Intro</h2>
-                  <p className="text-lg leading-relaxed text-neutral-700">{article.intro}</p>
-                </div>
-              )}
-              {article.heroImageUrl && (
-                <div className="overflow-hidden rounded-3xl">
-                  <Image
-                    src={article.heroImageUrl}
-                    alt={article.title}
-                    width={1600}
-                    height={720}
-                    className="h-72 w-full object-cover"
-                    unoptimized
-                    priority
+              {isVideo ? (
+                <>
+                  <VideoPlayer
+                    videoUrl={article.videoUrl}
+                    posterImage={article.heroImageUrl}
+                    title={article.title}
                   />
-                </div>
-              )}
-              <div
-                className="rich-text space-y-6 text-base leading-relaxed text-neutral-800 [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-hero-serif [&_h3]:mt-8 [&_h3]:text-2xl [&_table]:w-full [&_table]:border-collapse [&_th]:text-left [&_td]:border-t [&_td]:border-neutral-200 [&_td]:py-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_img]:rounded-2xl"
-                dangerouslySetInnerHTML={{ __html: article.contentHtml }}
-              />
-              {article.summary && (
-                <div className="bg-[#D6D2DB] p-6 text-base text-neutral-800">
-                  <h2 className="heading-2 text-primary-ink">The Birketts View</h2>
-                  <p className="mt-4 leading-relaxed">{article.summary}</p>
-                </div>
+                  {article.description && (
+                    <div className="space-y-4">
+                      <h2 className="heading-2 text-primary-ink">About this video</h2>
+                      <p className="text-lg leading-relaxed text-neutral-700">{article.description}</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {article.intro && (
+                    <div className="space-y-4">
+                      <h2 className="heading-2 text-primary-ink">Intro</h2>
+                      <p className="text-lg leading-relaxed text-neutral-700">{article.intro}</p>
+                    </div>
+                  )}
+                  {article.heroImageUrl && (
+                    <div className="overflow-hidden rounded-3xl">
+                      <Image
+                        src={article.heroImageUrl}
+                        alt={article.title}
+                        width={1600}
+                        height={720}
+                        className="h-72 w-full object-cover"
+                        unoptimized
+                        priority
+                      />
+                    </div>
+                  )}
+                  <div
+                    className="rich-text space-y-6 text-base leading-relaxed text-neutral-800 [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-hero-serif [&_h3]:mt-8 [&_h3]:text-2xl [&_table]:w-full [&_table]:border-collapse [&_th]:text-left [&_td]:border-t [&_td]:border-neutral-200 [&_td]:py-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_img]:rounded-2xl"
+                    dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+                  />
+                  {article.summary && (
+                    <div className="bg-[#D6D2DB] p-6 text-base text-neutral-800">
+                      <h2 className="heading-2 text-primary-ink">The Birketts View</h2>
+                      <p className="mt-4 leading-relaxed">{article.summary}</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
             <aside className="space-y-8">
               <div className="rounded-none border border-[#E5E2EB] bg-[#F9F7FB] p-6">
-                <p className="font-hero-serif text-2xl text-primary-ink">{authorEntries.length > 1 ? "Authors" : "Author"}</p>
+                <p className="font-hero-serif text-2xl text-primary-ink">
+                  {isVideo ? (authorEntries.length > 1 ? "Featuring" : "Featuring") : authorEntries.length > 1 ? "Authors" : "Author"}
+                </p>
                 {authorEntries.length > 0 ? (
                   <div className="mt-4 space-y-4">
                     {authorEntries.map((author, index) => (
@@ -280,7 +302,7 @@ export default async function ResourceDetailPage({ params }) {
                 </div>
               )}
               <div className="rounded-none border border-[#E5E2EB] bg-white p-6">
-                <p className="font-hero-serif text-xl text-primary-ink">Related articles</p>
+                <p className="font-hero-serif text-xl text-primary-ink">Related {isVideo ? "content" : "articles"}</p>
                 {relatedArticles.length > 0 ? (
                   <ul className="mt-4 space-y-4">
                     {relatedArticles.map((related) => (

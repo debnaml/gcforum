@@ -53,12 +53,28 @@ export default function ResourceCard({ resource }) {
   const multipleAuthors = (authors?.length ?? 0) > 1;
   const formattedDate = resource.publishedOn ? formatDate(resource.publishedOn, "dd MMMM yyyy") : null;
   const formattedTitle = formatTitle(resource.title || "");
+  const isVideo = (resource?.type ?? "").toLowerCase() === "video";
+  const backgroundImage = isVideo ? resource?.heroImageUrl ?? "" : "";
 
   return (
-    <article className="flex h-[250px] flex-col justify-between gap-6 border border-[#CCCCCC] bg-[#F5F4F6] px-[15px] py-5">
+    <article className="relative overflow-hidden flex h-[250px] flex-col justify-between gap-6 border border-[#CCCCCC] bg-[#F5F4F6] px-[15px] py-5">
+      {isVideo && backgroundImage && (
+        <>
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80" aria-hidden />
+        </>
+      )}
+      <div className="relative flex h-full flex-col justify-between gap-6">
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-4">
-          <span className="font-sans text-[16px] leading-[1.3] text-[#14848F]">{resource.category || "Resource"}</span>
+          <div className="flex items-center gap-2">
+            <span className="font-sans text-[16px] leading-[1.3] text-[#14848F]">{resource.category || "Resource"}</span>
+            {isVideo && <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">Video</span>}
+          </div>
           <FavoriteStarButton resourceId={resource.id ?? resource.slug} />
         </div>
         <h3 className="font-hero-serif text-[18px] leading-[1.2] text-[#333333]">
@@ -89,6 +105,7 @@ export default function ResourceCard({ resource }) {
           </span>
         </div>
         {formattedDate && <span className="text-sm text-neutral-500">{formattedDate}</span>}
+      </div>
       </div>
     </article>
   );
