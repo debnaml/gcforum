@@ -1,18 +1,30 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { hasSupabaseClient, supabaseAnonKey, supabaseUrl } from "../../../../lib/env";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+function parseCookieHeader(header = "") {
+  return new Map(
+    header
+      .split(/;\s*/)
+      .filter(Boolean)
+      .map((cookiePair) => {
+        const [rawName, ...rawValue] = cookiePair.split("=");
+        const name = decodeURIComponent(rawName.trim());
+        const value = decodeURIComponent(rawValue.join("=")?.trim() ?? "");
+        return [name, value];
+      }),
+  );
+}
+
+export async function POST(request) {
   console.log("[api/logout] Received logout request");
   if (!hasSupabaseClient) {
     console.warn("[api/logout] hasSupabaseClient is false; returning early");
     return NextResponse.json({ success: true });
   }
-
-  const cookieStore = await cookies();
+  const incomingCookies = parseCookieHeader(request.headers.get("cookie") ?? "");
 
   const response = NextResponse.json(
     { success: true },
@@ -26,13 +38,15 @@ export async function POST() {
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       get(name) {
-        return cookieStore.get(name)?.value;
+        return incomingCookies.get(name);
       },
       set(name, value, options) {
         response.cookies.set({ name, value, ...options });
+        incomingCookies.set(name, value);
       },
       remove(name, options) {
         response.cookies.set({ name, value: "", ...options, maxAge: 0 });
+        incomingCookies.delete(name);
       },
     },
   });
