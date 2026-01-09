@@ -1,11 +1,9 @@
 import Link from "next/link";
 import {
   deleteArticle,
-  deleteEvent,
   deleteResource,
   updateHomepageHero,
   upsertArticle,
-  upsertEvent,
   upsertResource,
 } from "../actions/contentActions";
 import {
@@ -52,6 +50,7 @@ export default async function AdminPage() {
 
   const recentResources = Array.isArray(resourcesPayload?.items) ? resourcesPayload.items.slice(0, 5) : [];
   const upcomingEvents = Array.isArray(events?.upcoming) ? events.upcoming.slice(0, 5) : [];
+  const pastEventsList = Array.isArray(events?.past) ? events.past : [];
   const featuredArticles = Array.isArray(articles) ? articles.slice(0, 5) : [];
   const memberList = Array.isArray(members) ? members : [];
   const pendingMembers = memberList.filter((member) => (member.status ?? "pending") === "pending");
@@ -278,77 +277,42 @@ export default async function AdminPage() {
 
         <section id="events" className="scroll-mt-32 rounded-3xl border border-neutral-200 bg-white p-8">
           <p className="text-sm uppercase tracking-[0.3em] text-primary/60">Events</p>
-          <h2 className="mt-2 heading-2 text-primary-ink">Add or update an event</h2>
-          <form action={upsertEvent} className="mt-6 grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-semibold text-primary-ink">
-              Event ID (for edits)
-              <input name="id" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" placeholder="event-regulation" />
-            </label>
-            <label className="text-sm font-semibold text-primary-ink">
-              Title
-              <input name="title" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" />
-            </label>
-            <label className="text-sm font-semibold text-primary-ink">
-              Category
-              <input name="category" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" />
-            </label>
-            <label className="text-sm font-semibold text-primary-ink">
-              Date
-              <input type="date" name="date" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" />
-            </label>
-            <label className="text-sm font-semibold text-primary-ink">
-              Attendees
-              <input type="number" name="attendees" defaultValue={0} className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" />
-            </label>
-            <label className="text-sm font-semibold text-primary-ink">
-              Capacity
-              <input type="number" name="capacity" defaultValue={15} className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" />
-            </label>
-            <button type="submit" className="md:col-span-2 rounded-none bg-primary px-6 py-3 text-white">Save event</button>
-          </form>
-          <div className="mt-8 space-y-4">
-            {upcomingEvents.map((event) => (
-              <article key={event.id} className="rounded-2xl border border-neutral-200 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="font-semibold text-primary-ink">{event.title}</p>
-                    <p className="text-sm text-neutral-600">{event.category} · {event.date}</p>
-                  </div>
-                  <span className="text-xs uppercase tracking-wide text-neutral-500">{event.id}</span>
-                </div>
-                <form action={upsertEvent} className="mt-4 grid gap-3 md:grid-cols-2">
-                  <input type="hidden" name="id" defaultValue={event.id} />
-                  <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                    Title
-                    <input name="title" defaultValue={event.title} className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2" />
-                  </label>
-                  <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                    Category
-                    <input name="category" defaultValue={event.category ?? ""} className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2" />
-                  </label>
-                  <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                    Date
-                    <input type="date" name="date" defaultValue={(event.date ?? "").slice(0, 10)} className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2" />
-                  </label>
-                  <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                    Attendees
-                    <input type="number" name="attendees" defaultValue={event.attendees ?? 0} className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2" />
-                  </label>
-                  <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                    Capacity
-                    <input type="number" name="capacity" defaultValue={event.capacity ?? 0} className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2" />
-                  </label>
-                  <button type="submit" className="md:col-span-2 rounded-none border border-primary px-4 py-2 text-sm font-semibold text-primary">
-                    Update event
-                  </button>
-                </form>
-                <form action={deleteEvent} className="mt-3">
-                  <input type="hidden" name="id" value={event.id} />
-                  <button className="text-sm font-semibold text-red-600">Remove event</button>
-                </form>
-              </article>
-            ))}
+          <h2 className="mt-2 heading-2 text-primary-ink">Programme summary</h2>
+          <p className="mt-2 text-sm text-neutral-600">
+            Use the dedicated workspace to schedule sessions, upload resources, and manage CTAs.
+          </p>
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <article className="rounded-2xl border border-neutral-200 p-4">
+              <p className="text-sm font-semibold text-primary-ink">Upcoming events</p>
+              {upcomingEvents.length === 0 ? (
+                <p className="mt-2 text-sm text-neutral-600">Nothing scheduled — add the next session.</p>
+              ) : (
+                <ul className="mt-3 space-y-2 text-sm text-neutral-600">
+                  {upcomingEvents.slice(0, 4).map((event) => (
+                    <li key={event.id}>{event.title}</li>
+                  ))}
+                </ul>
+              )}
+            </article>
+            <article className="rounded-2xl border border-neutral-200 p-4">
+              <p className="text-sm font-semibold text-primary-ink">Past sessions</p>
+              {pastEventsList.length === 0 ? (
+                <p className="mt-2 text-sm text-neutral-600">Add recaps and resources after each event.</p>
+              ) : (
+                <ul className="mt-3 space-y-2 text-sm text-neutral-600">
+                  {pastEventsList.slice(0, 4).map((event) => (
+                    <li key={event.id}>{event.title}</li>
+                  ))}
+                </ul>
+              )}
+            </article>
           </div>
+          <Link
+            href="/admin/events"
+            className="mt-6 inline-flex items-center rounded-full border border-primary px-5 py-2 text-sm font-semibold text-primary"
+          >
+            Open events workspace
+          </Link>
         </section>
 
         <section id="resources" className="scroll-mt-32 rounded-3xl border border-neutral-200 bg-white p-8">

@@ -42,7 +42,9 @@ Create the following tables/views (column names match the code):
 - `resource_categories` – lookup of `name`, `slug`, `description`
 - `resource_articles` – `slug`, `title`, `intro`, `summary`, `content_html`, `tags[]`, `hero_image_url`, `seo_title`, `seo_description`, `published_on`, `category_id`, `featured`
 - `resource_article_authors` – join table mapping `article_id` to `partner_id` (team profiles flagged as authors) with `position`
-- `events` – `title`, `category`, `date`, `attendees`, `capacity`, `is_past`
+- `events` – `slug`, `title`, `summary`, `description_html`, `format`, `focus_area`, `location_label`, `location_city`, `location_country`, `venue_name`, `is_virtual`, `starts_at`, `ends_at`, `timezone`, `registration_url`, `registration_label`, `cta_label`, `cta_url`, `status`, `featured`, `capacity`, `attendee_count`, `key_takeaways[]`, `hero_image_url`, `seo_*`
+- `event_resources` – `event_id` (fk), `title`, `description`, `file_url`, `storage_path`, `file_type`, `file_size_bytes`, `position`
+- Event downloads live in the public Supabase Storage bucket `event-resources`, capped at 10 MB per file via `/api/uploads/event-resources`.
 - `articles` – `title`, `slug`, `category`, `author`, `date`, `excerpt`, `featured`, `content json`
 - `partners` – `name`, `title`, `bio`, `avatar`, `order_index`, `show_on_team` (boolean), `is_author` (boolean)
 

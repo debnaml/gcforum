@@ -26,7 +26,15 @@ export default function SiteHeader({ profile }) {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
-  const navLinks = profile ? memberLinks : guestLinks;
+  const navLinks = useMemo(() => {
+    if (!profile) {
+      return guestLinks;
+    }
+    if (profile.role === ROLES.admin) {
+      return memberLinks;
+    }
+    return memberLinks.filter((link) => link.href !== "/members");
+  }, [profile?.role]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -203,9 +211,11 @@ export default function SiteHeader({ profile }) {
                 )}
               </div>
             ) : (
-              <Button as={Link} href="/login" variant="secondary" size="sm" className="text-[18px] font-normal">
-                Member login
-              </Button>
+              <Link href="/login" className="inline-flex">
+                <Button as="span" variant="secondary" size="sm" className="text-[18px] font-normal">
+                  Member login
+                </Button>
+              </Link>
             )}
           </div>
         </div>

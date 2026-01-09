@@ -4,6 +4,7 @@ const adminNavLinks = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/applications", label: "Applications" },
   { href: "/admin/members", label: "Members" },
+  { href: "/admin/events", label: "Events" },
   { href: "/admin/team", label: "Team" },
   { href: "/admin/articles", label: "Articles" },
   { href: "/admin/videos", label: "Videos" },
