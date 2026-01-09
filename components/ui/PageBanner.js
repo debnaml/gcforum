@@ -16,7 +16,7 @@ export default function PageBanner({
   const stackGap = spacing === "compact" ? "gap-2" : "gap-4";
 
   return (
-    <section className="w-full bg-[#331D4C] text-white">
+    <section className="w-full bg-primary text-white">
       <div className={`mx-auto flex min-h-[250px] max-w-6xl flex-col ${stackGap} px-6 py-[75px] ${alignmentClasses} ${verticalClasses}`}>
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#CBEEF3]">{eyebrow}</p>
