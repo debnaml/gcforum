@@ -36,7 +36,7 @@ export default function PartnersCarousel({ partners = [] }) {
   const handleNext = () => setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
 
   return (
-    <section id="about-birketts" className="bg-[#EAF8FA] py-16 scroll-mt-[140px]">
+    <section id="team" className="bg-[#EAF8FA] py-16 scroll-mt-[140px]">
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl text-primary-ink">

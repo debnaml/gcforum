@@ -7,7 +7,7 @@ export default function AboutBirkettsSection() {
   ];
 
   return (
-    <section className="bg-white py-16" id="about-birketts-details">
+    <section className="bg-white py-16 scroll-mt-[140px]" id="about-birketts">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-12 lg:grid-cols-2">
           <div className="space-y-5 text-[#333333]">

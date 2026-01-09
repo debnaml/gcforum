@@ -5,8 +5,8 @@ const footerColumns = [
     title: "Information",
     links: [
       { label: "About GC Forum", href: "/#about" },
-      { label: "About Birketts", href: "/#about-birketts-details" },
-      { label: "Meet the Team", href: "/#about-birketts" },
+      { label: "About Birketts", href: "/#about-birketts" },
+      { label: "Meet the Team", href: "/#team" },
       { label: "Membership", href: "/#apply" },
     ],
   },
