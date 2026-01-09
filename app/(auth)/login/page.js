@@ -27,9 +27,6 @@ export default async function LoginPage({ searchParams }) {
               <div className="mt-6">
                 <CredentialForm mode="signin" redirectTo={redirectTo} />
               </div>
-              <p className="mt-6 text-sm text-neutral-600">
-                Need an account? <Link href="/signup" className="text-primary">Request access</Link>
-              </p>
             </section>
           </div>
           <aside className="space-y-6">
