@@ -64,39 +64,18 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     if (supabase) {
       try {
-        console.log("[auth] Attempting local Supabase sign-out (scope=local)");
-        await supabase.auth.signOut({ scope: "local" });
-        console.log("[auth] Local Supabase sign-out resolved");
+        console.log("[auth] Attempting Supabase global sign-out");
+        await supabase.auth.signOut({ scope: "global" });
+        console.log("[auth] Supabase global sign-out resolved");
       } catch (_error) {
-        console.error("[auth] Local Supabase sign-out failed", _error);
-        // ignore local sign-out errors so the UI flow can continue
+        console.error("[auth] Supabase global sign-out failed", _error);
+        // ignore global sign-out errors so the UI flow can continue
       }
     }
 
     console.log("[auth] Clearing local session/profile state");
     setSession(null);
     setProfile(null);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
-
-    try {
-      console.log("[auth] Calling /api/auth/logout to clear server cookies");
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        cache: "no-store",
-        credentials: "same-origin",
-        keepalive: true,
-        signal: controller.signal,
-      });
-      console.log("[auth] /api/auth/logout request completed");
-    } catch (_error) {
-      console.error("[auth] /api/auth/logout request failed", _error);
-      // swallow network errors; the caller will redirect regardless
-    } finally {
-      clearTimeout(timeoutId);
-      console.log("[auth] Logout flow finished");
-    }
   }, [supabase]);
 
   const value = useMemo(

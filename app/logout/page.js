@@ -15,11 +15,7 @@ export default function LogoutPage() {
 
     async function performLogout() {
       if (logout) {
-        try {
-          await logout();
-        } catch (_error) {
-          // swallow errors and continue to navigation flow
-        }
+        logout().catch((error) => console.error("[logout/page] logout() failed", error));
       }
 
       if (active) {
