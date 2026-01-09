@@ -57,6 +57,11 @@ export default function PartnerCard({ partner }) {
             <p className="mt-1 font-sans text-sm font-semibold text-[#237781]">{partner.title}</p>
           )}
         </div>
+        {partner.bio && (
+          <p className="mt-4 flex-1 text-[14px] leading-relaxed text-neutral-700">
+            {partner.bio}
+          </p>
+        )}
         <div className="mt-6 border-t border-[#E0E0E0] pt-4 text-sm font-semibold text-primary-ink">
           {partner.email && (
             <a href={`mailto:${partner.email}`} className="flex items-center gap-2 text-[#237781]">
