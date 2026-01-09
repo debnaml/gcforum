@@ -1,6 +1,6 @@
 import Button from "../../ui/Button";
 
-const memberBenefits = [
+export const memberBenefits = [
   {
     title: "Networking",
     description: "Connect with fellow GCs and legal leaders",

@@ -18,6 +18,8 @@ function formatMonthDay(value) {
 export default function EventCard({ event }) {
   const { month, day } = formatMonthDay(event.startsAt);
   const location = event.locationLabel || event.locationCity || (event.isVirtual ? "Virtual" : "Location TBC");
+  const venueName = typeof event.venueName === "string" ? event.venueName.trim() : "";
+  const locationDisplay = venueName ? `${location} - ${venueName}` : location;
   const isPast = Boolean(event.isPast);
   const showRegistration = Boolean(event.registrationUrl) && !isPast;
   const hasResources = typeof event.resourceCount === "number" && event.resourceCount > 0;
@@ -40,7 +42,7 @@ export default function EventCard({ event }) {
         </div>
       </div>
       <div className="border-t border-[#CCCCCC] pt-4 text-sm text-neutral-600">
-        <p className="font-semibold text-primary-ink">{location}</p>
+        <p className="font-semibold text-primary-ink">{locationDisplay}</p>
         {hasResources && (
           <p className="text-xs text-neutral-500">{event.resourceCount} downloadable resource{event.resourceCount === 1 ? "" : "s"}</p>
         )}
