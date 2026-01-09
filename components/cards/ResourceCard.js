@@ -54,20 +54,13 @@ export default function ResourceCard({ resource }) {
   const formattedDate = resource.publishedOn ? formatDate(resource.publishedOn, "dd MMMM yyyy") : null;
   const formattedTitle = formatTitle(resource.title || "");
   const isVideo = (resource?.type ?? "").toLowerCase() === "video";
-  const backgroundImage = isVideo ? resource?.heroImageUrl ?? "" : "";
 
   return (
-    <article className="relative overflow-hidden flex h-[250px] flex-col justify-between gap-6 border border-[#CCCCCC] bg-[#F5F4F6] px-[15px] py-5">
-      {isVideo && backgroundImage && (
-        <>
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
-            aria-hidden
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80" aria-hidden />
-        </>
-      )}
+    <article
+      className={`relative overflow-hidden flex h-[250px] flex-col justify-between gap-6 border border-[#CCCCCC] px-[15px] py-5 transform transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] ${
+        isVideo ? "bg-[#EAF8FA]" : "bg-[#FEFEFE]"
+      }`}
+    >
       <div className="relative flex h-full flex-col justify-between gap-6">
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-4">
