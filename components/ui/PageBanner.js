@@ -21,7 +21,7 @@ export default function PageBanner({
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#CBEEF3]">{eyebrow}</p>
         )}
-        <h1 className="font-hero-serif text-4xl text-white md:text-5xl">{title}</h1>
+        <h1 className="font-hero-serif text-4xl text-white md:text-5xl whitespace-pre-line">{title}</h1>
         {description && <p className="text-lg text-white/80">{description}</p>}
         {children}
       </div>

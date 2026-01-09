@@ -30,11 +30,11 @@ export default function SiteHeader({ profile }) {
     if (!profile) {
       return guestLinks;
     }
-    if (profile.role === ROLES.admin) {
-      return memberLinks;
-    }
-    return memberLinks.filter((link) => link.href !== "/members");
-  }, [profile?.role]);
+    const baseLinks = profile.role === ROLES.admin ? memberLinks : memberLinks.filter((link) => link.href !== "/members");
+    return baseLinks.map((link, index) =>
+      index === 0 ? { ...link, href: "/dashboard" } : link,
+    );
+  }, [profile?.role, profile]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [scrolled, setScrolled] = useState(false);
