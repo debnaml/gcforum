@@ -12,7 +12,7 @@ const adminNavLinks = [
 
 export default function AdminLayout({ children }) {
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-6xl space-y-8 px-6 pb-16">
       <nav
         aria-label="Admin sections"
         className="rounded-3xl border border-primary/10 bg-white/90 px-6 py-4 text-sm font-semibold text-primary-ink shadow-sm"
