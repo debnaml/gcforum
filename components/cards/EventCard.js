@@ -23,9 +23,13 @@ export default function EventCard({ event }) {
   const isPast = Boolean(event.isPast);
   const showRegistration = Boolean(event.registrationUrl) && !isPast;
   const hasResources = typeof event.resourceCount === "number" && event.resourceCount > 0;
+  const cardBackground = isPast ? "rgb(203, 238, 243)" : "rgb(244, 238, 249)";
 
   return (
-    <article className="flex h-full flex-col justify-between gap-6 border border-[#CCCCCC] bg-[#FEFEFE] px-[15px] py-5 transform transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)]">
+    <article
+      className="flex h-full flex-col justify-between gap-6 border border-[#CCCCCC] px-[15px] py-5 transform transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)]"
+      style={{ backgroundColor: cardBackground }}
+    >
       <div className="flex items-start gap-4">
         <div className="border border-primary/30 bg-white px-3 py-2 text-center">
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">{month}</p>
