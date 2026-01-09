@@ -17,25 +17,38 @@ export default async function LoginPage({ searchParams }) {
     <div className="bg-white min-h-screen">
       <RecoveryRedirector />
       <LoginErrorReporter redirectTo={redirectTo} />
-      <div className="relative left-1/2 right-1/2 -mt-16 w-screen -translate-x-1/2">
-        <PageBanner title="Login" centerContent />
-      </div>
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[2fr_1fr]">
-        <div>
-          <div className="mt-10 rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
-            <CredentialForm mode="signin" redirectTo={redirectTo} />
-            <p className="mt-6 text-sm text-neutral-600">
-              Need an account? <Link href="/signup" className="text-primary">Request access</Link>
-            </p>
+      <PageBanner title="Login" centerContent />
+      <div className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="mt-16 grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <section className="border border-neutral-100 bg-white p-8">
+              <h2 className="text-xl font-semibold text-primary-ink">Sign in to GC Forum</h2>
+              <p className="mt-2 text-sm text-neutral-600">Access members-only resources, events, and your profile controls.</p>
+              <div className="mt-6">
+                <CredentialForm mode="signin" redirectTo={redirectTo} />
+              </div>
+              <p className="mt-6 text-sm text-neutral-600">
+                Need an account? <Link href="/signup" className="text-primary">Request access</Link>
+              </p>
+            </section>
           </div>
-        </div>
-        <div className="rounded-3xl bg-primary-ink p-8 text-white">
-          <h2 className="heading-2">Role-based access</h2>
-          <ul className="mt-6 space-y-4 text-sm text-white/80">
-            <li>Members: resource access, event booking, profile controls.</li>
-            <li>Editors: article CRUD, resource publishing, event updates.</li>
-            <li>Admins: everything plus homepage CMS and membership approvals.</li>
-          </ul>
+          <aside className="space-y-6">
+            <div className="border border-neutral-100 bg-[#F9F7FB] p-6 text-sm text-neutral-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/70">Role-based access</p>
+              <ul className="mt-4 space-y-3">
+                <li><span className="font-semibold text-primary-ink">Members</span>: resource library, event booking, profile controls.</li>
+                <li><span className="font-semibold text-primary-ink">Editors</span>: articles, resources, and event updates.</li>
+                <li><span className="font-semibold text-primary-ink">Admins</span>: full CMS plus membership approvals.</li>
+              </ul>
+            </div>
+            <div className="border border-dashed border-primary/30 bg-white p-6 text-sm text-neutral-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/70">Need support?</p>
+              <p className="mt-2">Contact the Birketts GC Forum team if you need help resetting access or updating your organisation.</p>
+              <Link href="mailto:gcforum@birketts.co.uk" className="mt-4 inline-flex text-primary font-semibold">
+                gcforum@birketts.co.uk
+              </Link>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

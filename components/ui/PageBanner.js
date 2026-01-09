@@ -5,6 +5,7 @@ export default function PageBanner({
   align = "left",
   centerContent = false,
   spacing = "normal",
+  bleed = false,
   children,
 }) {
   if (!title) {
@@ -15,9 +16,13 @@ export default function PageBanner({
   const verticalClasses = centerContent ? "justify-center" : "justify-start";
   const stackGap = spacing === "compact" ? "gap-2" : "gap-4";
 
+  const containerClasses = bleed
+    ? `flex min-h-[250px] w-full flex-col ${stackGap} px-6 py-[75px] ${alignmentClasses} ${verticalClasses}`
+    : `mx-auto flex min-h-[250px] max-w-6xl flex-col ${stackGap} px-6 py-[75px] ${alignmentClasses} ${verticalClasses}`;
+
   return (
     <section className="w-full bg-primary text-white">
-      <div className={`mx-auto flex min-h-[250px] max-w-6xl flex-col ${stackGap} px-6 py-[75px] ${alignmentClasses} ${verticalClasses}`}>
+      <div className={containerClasses}>
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#CBEEF3]">{eyebrow}</p>
         )}

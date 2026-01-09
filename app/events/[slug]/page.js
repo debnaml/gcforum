@@ -110,10 +110,7 @@ export default async function EventDetailPage({ params }) {
                   <img src={heroImage} alt={event.heroImageAlt || event.title} className="h-full w-full object-cover" />
                 </div>
               )}
-              <article
-                className="rich-text space-y-6 text-base leading-relaxed text-neutral-800 [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-hero-serif [&_h3]:mt-8 [&_h3]:text-2xl [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_table]:w-full [&_table]:border-collapse [&_th]:text-left [&_td]:border-t [&_td]:border-neutral-200 [&_td]:py-2"
-                dangerouslySetInnerHTML={{ __html: event.descriptionHtml || "" }}
-              />
+              <article className="prose prose-lg max-w-none text-neutral-800" dangerouslySetInnerHTML={{ __html: event.descriptionHtml || "" }} />
 
               {event.keyTakeaways?.length > 0 && (
                 <section className="border border-neutral-200 bg-white p-6">

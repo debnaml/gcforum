@@ -9,7 +9,6 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/profile
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [magicLink, setMagicLink] = useState(false);
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
   const emitDebug = (details) => {
@@ -24,29 +23,6 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/profile
     setMessage("");
 
     try {
-      if (magicLink) {
-        const supabase = getBrowserClient();
-        if (!supabase) {
-          setMessage("Supabase is not configured. Add your environment variables to .env.local.");
-          emitDebug({ type: "magic_link_supabase_missing" });
-          return;
-        }
-
-        const { error } = await supabase.auth.signInWithOtp({
-          email,
-          options: { emailRedirectTo: `${window.location.origin}/profile` },
-        });
-
-        if (error) {
-          setMessage(error.message);
-          emitDebug({ type: "magic_link_error", message: error.message });
-          return;
-        }
-
-        setMessage("Check your inbox for the magic link.");
-        return;
-      }
-
       if (mode === "signin") {
         const response = await fetch("/api/auth/signin", {
           method: "POST",
@@ -112,21 +88,15 @@ export default function CredentialForm({ mode = "signin", redirectTo = "/profile
           className="rounded-xl border border-neutral-200 px-4 py-3"
         />
       </label>
-      {!magicLink && (
-        <label className="flex flex-col gap-2 text-sm font-semibold text-primary-ink">
-          Password
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="rounded-xl border border-neutral-200 px-4 py-3"
-          />
-        </label>
-      )}
-      <label className="flex items-center gap-2 text-sm text-neutral-600">
-        <input type="checkbox" checked={magicLink} onChange={(event) => setMagicLink(event.target.checked)} />
-        Sign in with a magic link
+      <label className="flex flex-col gap-2 text-sm font-semibold text-primary-ink">
+        Password
+        <input
+          type="password"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          className="rounded-xl border border-neutral-200 px-4 py-3"
+        />
       </label>
       <Button type="submit" disabled={status === "loading"}>
         {status === "loading" ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}

@@ -20,8 +20,10 @@ export default async function AboutPage() {
 
   return (
     <div className="bg-white">
-      <PageBanner title="About the Birketts GC Forum" centerContent={false} />
-
+       <PageBanner
+              title="About the Birketts GC Forum"
+              centerContent
+            />
       <section className="bg-white">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="grid gap-12 lg:grid-cols-2">

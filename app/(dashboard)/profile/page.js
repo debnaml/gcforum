@@ -16,10 +16,8 @@ export default async function ProfilePage() {
 
   return (
     <div className="bg-white">
+      <PageBanner title={welcomeTitle} centerContent />
       <div className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="relative left-1/2 right-1/2 -mt-16 w-screen -translate-x-1/2">
-          <PageBanner title={welcomeTitle} centerContent />
-        </div>
         <section className="mt-16 space-y-10">
           <SectionHeading
             title="Manage your member profile"
