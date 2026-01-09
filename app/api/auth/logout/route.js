@@ -5,12 +5,14 @@ import { hasSupabaseClient, supabaseAnonKey, supabaseUrl } from "../../../../lib
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request) {
+export async function POST() {
+  console.log("[api/logout] Received logout request");
   if (!hasSupabaseClient) {
+    console.warn("[api/logout] hasSupabaseClient is false; returning early");
     return NextResponse.json({ success: true });
   }
 
-  const requestCookies = cookies();
+  const cookieStore = await cookies();
 
   const response = NextResponse.json(
     { success: true },
@@ -24,7 +26,7 @@ export async function POST(request) {
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       get(name) {
-        return requestCookies.get(name)?.value;
+        return cookieStore.get(name)?.value;
       },
       set(name, value, options) {
         response.cookies.set({ name, value, ...options });
@@ -35,7 +37,14 @@ export async function POST(request) {
     },
   });
 
-  await supabase.auth.signOut();
+  try {
+    console.log("[api/logout] Calling supabase.auth.signOut() on server");
+    await supabase.auth.signOut();
+    console.log("[api/logout] Server-side sign-out completed");
+  } catch (error) {
+    console.error("[api/logout] Server-side sign-out failed", error);
+  }
 
+  console.log("[api/logout] Returning logout response");
   return response;
 }

@@ -57,9 +57,10 @@ export default function ResourceCard({ resource, disableHover = false }) {
 
   const baseClasses = "relative overflow-hidden flex h-[250px] flex-col justify-between gap-6 border border-[#CCCCCC] px-[15px] py-5";
   const hoverClasses = disableHover ? "" : "transform transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)]";
+  const backgroundClass = isVideo ? "bg-[#EAF8FA]" : "bg-[#f4eef9]";
 
   return (
-    <article className={`${baseClasses} ${hoverClasses} ${isVideo ? "bg-[#EAF8FA]" : "bg-[#FEFEFE]"}`}>
+    <article className={`${baseClasses} ${hoverClasses} ${backgroundClass}`}>
       <div className="relative flex h-full flex-col justify-between gap-6">
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-4">
